@@ -1,0 +1,22 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-photo-service
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: photo_service_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - photo-service-network
+
+networks:
+  photo-service-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
