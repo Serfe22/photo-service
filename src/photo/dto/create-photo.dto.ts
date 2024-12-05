@@ -1,14 +1,24 @@
 // src/photo/dto/create-photo.dto.ts
-import { IsNotEmpty, IsArray, IsNumber } from 'class-validator';
+import { IsString, IsOptional, IsUrl } from 'class-validator';
 
 export class CreatePhotoDto {
-  @IsNotEmpty()
-  readonly filename: string;
+  @IsString()
+  name: string;
 
-  @IsArray()
-  @IsNumber({}, { each: true })
-  readonly categories: number[];
+  @IsOptional()
+  @IsString()
+  location?: string;
 
-  @IsNumber()
-  readonly userId: number;  // Reference to the User who owns the photo
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsUrl()
+  url: string;
+
+  @IsString()
+  userId: string;  // If you are sending the user ID when creating a photo
+
+  @IsOptional()
+  categories?: string[];  // Assuming categories are sent as an array of category IDs
 }
