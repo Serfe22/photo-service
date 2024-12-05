@@ -1,22 +1,36 @@
 services:
-  db:
+  mysql:
     image: mysql:8.0
-    container_name: mysql-photo-service
+    container_name: photo_service_db
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root_password
       MYSQL_DATABASE: photo_service_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_USER: photo_user
+      MYSQL_PASSWORD: photo_password
     ports:
       - "3306:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
     networks:
-      - photo-service-network
+      - photo_service_network
 
-networks:
-  photo-service-network:
-    driver: bridge
+  app:
+    build: .
+    container_name: photo_service_app
+    environment:
+      DATABASE_HOST: mysql
+    ports:
+      - "3000:3000"  # Exposes your NestJS app
+    depends_on:
+      - mysql
+    networks:
+      - photo_service_network
+    command: npm run start
 
 volumes:
-  mysql-data:
+  mysql_data:
+    driver: local
+
+networks:
+  photo_service_network:
+    driver: bridge
