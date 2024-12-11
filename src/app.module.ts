@@ -15,11 +15,11 @@ import { JwtStrategy } from './auth/jwt.strategy';  // Correct path to jwt.strat
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DATABASE_HOST || 'mysql', // Use 'mysql' if running inside Docker
+      host: process.env.DATABASE_HOST || '127.0.0.1', // Use 'mysql' if running inside Docker
       port: 3306,
-      username: 'photo_user',
-      password: 'photo_password',
-      database: 'photo_service_db',
+      username: process.env.DATABASE_USER || 'photo_user',
+      password: process.env.DATABASE_PASSWORD || 'photo_password',
+      database: process.env.DATABASE_NAME || 'photo_service_db',
       entities: [User, Photo, Category, Profile, PhotoCategory],  // Add entities
       synchronize: true,  // Set to false in production
     }),
