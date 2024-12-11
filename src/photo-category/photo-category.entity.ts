@@ -9,8 +9,8 @@ export class PhotoCategory {
   id: number;
 
   @ManyToOne(() => Photo, (photo) => photo.categories)
-  photo: Photo;
+  photo: Photo; // Many-to-One relationship with Photo
 
   @ManyToOne(() => Category, (category) => category.photos)
-  category: Category;
+  category: Category; // Many-to-One relationship with Category
 }

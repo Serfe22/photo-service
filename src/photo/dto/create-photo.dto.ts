@@ -1,24 +1,23 @@
 // src/photo/dto/create-photo.dto.ts
-import { IsString, IsOptional, IsUrl } from 'class-validator';
+import { IsString, IsOptional, IsUrl, IsArray, IsNumber } from 'class-validator';
 
 export class CreatePhotoDto {
   @IsString()
   name: string;
 
-  @IsOptional()
   @IsString()
-  location?: string;
+  location: string;
 
-  @IsOptional()
   @IsString()
-  description?: string;
+  description: string;
 
   @IsUrl()
   url: string;
 
-  @IsString()
-  userId: string;  // If you are sending the user ID when creating a photo
+  @IsNumber()
+  userId: number;
 
-  @IsOptional()
-  categories?: string[];  // Assuming categories are sent as an array of category IDs
+  @IsArray()
+  @IsOptional()  // Make categories optional
+  categories?: number[];  // categories will be an array of category IDs
 }

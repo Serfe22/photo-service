@@ -9,6 +9,7 @@ import { Profile } from './profile/profile.entity';
 import { User } from './user/user.entity';
 import { PhotoCategory } from './photo-category/photo-category.entity'; 
 import { JwtStrategy } from './auth/jwt.strategy';  // Correct path to jwt.strategy
+import { ProfileModule } from './profile/profile.module';
 // import { AuthModule } from './auth/auth.module'; 
 
 @Module({
@@ -26,6 +27,7 @@ import { JwtStrategy } from './auth/jwt.strategy';  // Correct path to jwt.strat
     UserModule,
     PhotoModule,
     CategoryModule,
+    ProfileModule,
   ],
 })
 export class AppModule {}

@@ -2,14 +2,14 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateProfileDto {
-  @IsNotEmpty()
+  @IsNotEmpty()  // Gender should be required
   @IsString()
-  readonly bio: string;
+  readonly gender: string;  // Gender field
 
-  @IsOptional()
+  @IsNotEmpty()  // Photo should be required
   @IsString()
-  readonly avatarUrl?: string;
+  readonly photo: string;  // Photo URL or file path
 
-  @IsNotEmpty()
-  readonly userId: number;  // Reference to the User who owns the profile
+  @IsNotEmpty()  // Reference to the User who owns the profile
+  readonly userId: number;
 }

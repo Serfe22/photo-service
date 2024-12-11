@@ -4,9 +4,5 @@ import { IsOptional, IsString } from 'class-validator';
 export class UpdateProfileDto {
   @IsOptional()
   @IsString()
-  readonly bio?: string;
-
-  @IsOptional()
-  @IsString()
-  readonly avatarUrl?: string;
+  readonly photo?: string;  // This is the field that exists in your Profile entity
 }

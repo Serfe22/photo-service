@@ -1,6 +1,6 @@
 // src/profile/profile.entity.ts
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
-import { User } from '../user/user.entity';  // Adjust path if necessary
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Profile {
@@ -8,9 +8,18 @@ export class Profile {
   id: number;
 
   @Column()
-  bio: string;
+  gender: string;
 
-  @OneToOne(() => User)
-  @JoinColumn()
-  user: User;
+  @Column({ nullable: true })
+  photo: string; // Photo URL or file path
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  modifiedAt: Date;
+
+  @OneToOne(() => User, (user) => user.profile)
+  @JoinColumn() // Link the profile back to the user
+  user: User; // One-to-One relationship with User
 }

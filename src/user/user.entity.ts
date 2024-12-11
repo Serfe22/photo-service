@@ -1,5 +1,5 @@
 // src/user/user.entity.ts
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Photo } from '../photo/photo.entity';
 import { Profile } from '../profile/profile.entity';
 
@@ -9,14 +9,24 @@ export class User {
   id: number;
 
   @Column({ unique: true })
-  email: string;
+  username: string;
+  
+  @Column({ unique: true })  // Ensure email is unique
+  email: string;  // This field should exist in your User entity
 
   @Column()
   password: string;
 
-  @OneToMany(() => Photo, (photo) => photo.user)
-  photos: Photo[];
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @OneToMany(() => Profile, (profile) => profile.user)
-  profile: Profile;
+  @UpdateDateColumn()
+  modifiedAt: Date;
+
+  @OneToMany(() => Photo, (photo) => photo.user)
+  photos: Photo[]; // One-to-Many relationship with Photo
+
+  @OneToOne(() => Profile, (profile) => profile.user)
+  @JoinColumn() // Link the profile column with the user
+  profile: Profile; // One-to-One relationship with Profile
 }

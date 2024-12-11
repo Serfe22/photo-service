@@ -1,7 +1,7 @@
 // src/photo/photo.entity.ts
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { User } from '../user/user.entity';  // Adjust path if necessary
-import { Category } from '../category/category.entity';  // Adjust path if necessary
+import { User } from '../user/user.entity';
+import { Category } from '../category/category.entity';
 
 @Entity()
 export class Photo {
@@ -9,27 +9,27 @@ export class Photo {
   id: number;
 
   @Column()
-  name: string;  // Add name column for the photo's name
+  name: string;
 
   @Column({ nullable: true })
-  location: string;  // Add location column for where the photo was taken
+  location: string;
 
   @Column({ nullable: true })
-  description: string;  // Add description column for photo description
+  description: string;
 
   @Column()
-  url: string;  // URL or file path for the photo
+  url: string;
 
   @CreateDateColumn()
-  createdAt: Date;  // Automatically handled by TypeORM
+  createdAt: Date;
 
   @UpdateDateColumn()
-  modifiedAt: Date;  // Automatically handled by TypeORM
+  modifiedAt: Date;
 
   @ManyToOne(() => User, (user) => user.photos)
-  user: User;  // Relationship to the User entity
-  
+  user: User; // Many-to-One relationship with User
+
   @ManyToMany(() => Category, (category) => category.photos)
-  @JoinTable()  // This creates the join table for the ManyToMany relationship
-  categories: Category[];  // Ensure this property exists
+  @JoinTable() // This creates the join table for the Many-to-Many relationship
+  categories: Category[]; // Many-to-Many relationship with Category
 }

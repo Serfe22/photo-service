@@ -36,8 +36,19 @@ export class ProfileService {
 
   // Update a profile by user ID
   async update(userId: number, updateProfileDto: UpdateProfileDto): Promise<Profile> {
-    await this.profileRepository.update({ user: { id: userId } }, updateProfileDto);
-    return this.findByUserId(userId);
+    const profile = await this.profileRepository.findOne({ where: { user: { id: userId } } });
+  
+    if (!profile) {
+      throw new Error('Profile not found');
+    }
+  
+    // Check if 'photo' exists in the DTO and update it
+    if (updateProfileDto.photo) {
+      profile.photo = updateProfileDto.photo;  // Update the photo field if it exists
+    }
+  
+    // Save and return the updated profile
+    return this.profileRepository.save(profile); 
   }
 
   // Delete a profile by user ID

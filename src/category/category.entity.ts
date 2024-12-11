@@ -11,14 +11,14 @@ export class Category {
   name: string;
 
   @Column({ nullable: true })
-  description: string;  // Add description column
+  description: string;
 
   @CreateDateColumn()
-  createdAt: Date;  // Automatically handled by TypeORM
+  createdAt: Date;
 
   @UpdateDateColumn()
-  modifiedAt: Date;  // Automatically handled by TypeORM
+  updatedAt: Date;
 
   @ManyToMany(() => Photo, (photo) => photo.categories)
-  photos: Photo[];
+  photos: Photo[]; // Many-to-Many relationship with Photo
 }
