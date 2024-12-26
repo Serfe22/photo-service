@@ -1,58 +1,83 @@
-// src/profile/profile.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Profile } from './profile.entity';
-import { CreateProfileDto } from './dto/create-profile.dto';
-import { UpdateProfileDto } from './dto/update-profile.dto';
 import { User } from '../user/user.entity';
+import { UpdateProfileDto } from './dto/update-profile.dto'; // Ensure this DTO is correctly imported
+import { CreateProfileDto } from './dto/create-profile.dto'; // Import CreateProfileDto if needed
 
 @Injectable()
 export class ProfileService {
   constructor(
     @InjectRepository(Profile)
-    private profileRepository: Repository<Profile>,  // Injecting the Profile repository
+    private profileRepository: Repository<Profile>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}
 
-  // Create a new profile
+  // Create a new profile for a user
   async create(createProfileDto: CreateProfileDto): Promise<Profile> {
-    const { userId, ...profileData } = createProfileDto;
-    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const { userId } = createProfileDto;
 
-    const newProfile = this.profileRepository.create({
-      ...profileData,
-      user,
+    // Ensure the user exists before creating a profile
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException(`User with id ${userId} not found`);
+    }
+
+    // Create a new profile linked to the user
+    const profile = this.profileRepository.create({ ...createProfileDto, user });
+    return this.profileRepository.save(profile);
+  }
+
+  // Find profile by userId
+  async findByUserId(userId: number): Promise<Profile> {
+    // Ensure the user exists
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException(`User with id ${userId} not found`);
+    }
+
+    // Find the profile associated with the user
+    const profile = await this.profileRepository.findOne({
+      where: { user: { id: userId } }, // Looking for profile linked to userId
     });
 
-    return this.profileRepository.save(newProfile);
-  }
-
-  // Get profile by user ID
-  async findByUserId(userId: number): Promise<Profile> {
-    return this.profileRepository.findOne({ where: { user: { id: userId } } });
-  }
-
-  // Update a profile by user ID
-  async update(userId: number, updateProfileDto: UpdateProfileDto): Promise<Profile> {
-    const profile = await this.profileRepository.findOne({ where: { user: { id: userId } } });
-  
     if (!profile) {
-      throw new Error('Profile not found');
+      throw new NotFoundException(`Profile for user with id ${userId} not found`);
     }
-  
-    // Check if 'photo' exists in the DTO and update it
-    if (updateProfileDto.photo) {
-      profile.photo = updateProfileDto.photo;  // Update the photo field if it exists
-    }
-  
-    // Save and return the updated profile
-    return this.profileRepository.save(profile); 
+
+    return profile;
   }
 
-  // Delete a profile by user ID
+  // Update profile
+  async update(userId: number, updateProfileDto: UpdateProfileDto): Promise<Profile> {
+    // Find the profile associated with the user
+    const profile = await this.profileRepository.findOne({
+      where: { user: { id: userId } },
+    });
+
+    if (!profile) {
+      throw new NotFoundException(`Profile for user with id ${userId} not found`);
+    }
+
+    // Update the profile fields
+    Object.assign(profile, updateProfileDto);
+    return this.profileRepository.save(profile);
+  }
+
+  // Delete profile
   async remove(userId: number): Promise<void> {
-    await this.profileRepository.delete({ user: { id: userId } });
+    // Find the profile associated with the user
+    const profile = await this.profileRepository.findOne({
+      where: { user: { id: userId } },
+    });
+
+    if (!profile) {
+      throw new NotFoundException(`Profile for user with id ${userId} not found`);
+    }
+
+    // Delete the profile
+    await this.profileRepository.remove(profile);
   }
 }

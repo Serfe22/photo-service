@@ -9,8 +9,6 @@ services:
       MYSQL_PASSWORD: photo_password
     ports:
       - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
     networks:
       - photo_service_network
 
@@ -18,18 +16,13 @@ services:
     build: .
     container_name: photo_service_app
     environment:
-      DATABASE_HOST: 127.0.0.1
-    ports:
-      - "3000:3000"  # Exposes your NestJS app
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
     depends_on:
       - mysql
+    command: ["sh", "-c", "wait-for-it.sh mysql:3306 -- npm run start"]
     networks:
       - photo_service_network
-    command: npm run start
-
-volumes:
-  mysql_data:
-    driver: local
 
 networks:
   photo_service_network:

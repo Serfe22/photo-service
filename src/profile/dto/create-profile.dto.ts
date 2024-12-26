@@ -1,5 +1,5 @@
 // src/profile/dto/create-profile.dto.ts
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateProfileDto {
   @IsNotEmpty()  // Gender should be required

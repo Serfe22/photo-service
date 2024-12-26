@@ -26,7 +26,6 @@ export class CategoryService {
 
   // Find one category by ID
   async findOne(id: number): Promise<Category> {
-    // src/category/category.service.ts
     return this.categoryRepository.findOne({ where: { id } });
 
   }
